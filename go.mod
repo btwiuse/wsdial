@@ -1,11 +1,8 @@
 module github.com/btwiuse/wsdial
 
-go 1.22.1
+go 1.25
 
 require (
-	github.com/btwiuse/wsconn v0.0.1
-	github.com/gorilla/websocket v1.5.1
-	nhooyr.io/websocket v1.8.10
+	github.com/coder/websocket v1.8.13
+	github.com/gorilla/websocket v1.5.3
 )
-
-require golang.org/x/net v0.21.0 // indirect

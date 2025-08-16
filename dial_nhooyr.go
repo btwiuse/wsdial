@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"nhooyr.io/websocket"
+	"github.com/coder/websocket"
 )
 
 func Dial(u *url.URL) (conn net.Conn, err error) {
