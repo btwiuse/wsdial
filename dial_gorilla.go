@@ -25,5 +25,5 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 		return nil, err
 	}
 
-	return wsconn.NetConn(wsconn), nil
+	return wsconn.NetConn(), nil
 }
