@@ -13,6 +13,8 @@ import (
 )
 
 func Dial(ctx context.Context, u *url.URL, hdr http.Header) (conn net.Conn, err error) {
+	hdr = fillAuthHeader(hdr, u)
+
 	var wd *websocket.Dialer = &websocket.Dialer{
 		Proxy: http.ProxyFromEnvironment,
 		TLSClientConfig: &tls.Config{

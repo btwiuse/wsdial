@@ -12,6 +12,8 @@ import (
 )
 
 func Dial(ctx context.Context, u *url.URL, hdr http.Header) (conn net.Conn, err error) {
+	hdr = fillAuthHeader(hdr, u)
+
 	wsconn, _, err := websocket.Dial(
 		ctx,
 		u.String(),
