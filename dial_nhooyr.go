@@ -23,6 +23,8 @@ func Dial(ctx context.Context, u *url.URL, hdr http.Header) (conn net.Conn, err 
 		return nil, err
 	}
 
+	wsconn.SetReadLimit(-1)
+
 	return websocket.NetConn(ctx, wsconn, websocket.MessageBinary), nil
 }
 
