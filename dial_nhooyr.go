@@ -37,9 +37,9 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 }
 
 func authorizationHeader(userinfo *url.Userinfo) http.Header {
-	return http.Header{
-		"Authorization": {
-			"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
-		},
+	h := http.Header{}
+	if userinfo != nil {
+		h.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(userinfo.String())))
 	}
+	return h
 }
