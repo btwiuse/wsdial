@@ -4,7 +4,6 @@ package wsdial
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/base64"
 	"net"
 	"net/http"
@@ -14,20 +13,15 @@ import (
 )
 
 func Dial(u *url.URL) (conn net.Conn, err error) {
+	hdr := http.Header{}
+	if u.User != nil {
+		hdr.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(u.User.String())))
+	}
+
 	wsconn, _, err := websocket.Dial(
 		context.Background(),
 		u.String(),
-		&websocket.DialOptions{
-			HTTPClient: &http.Client{
-				Transport: &http.Transport{
-					Proxy: http.ProxyFromEnvironment,
-					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: true,
-					},
-				},
-			},
-			HTTPHeader: authorizationHeader(u.User),
-		},
+		dialOptions(hdr),
 	)
 	if err != nil {
 		return nil, err
@@ -36,10 +30,3 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
 }
 
-func authorizationHeader(userinfo *url.Userinfo) http.Header {
-	h := http.Header{}
-	if userinfo != nil {
-		h.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(userinfo.String())))
-	}
-	return h
-}

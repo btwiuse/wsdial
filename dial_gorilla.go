@@ -1,4 +1,4 @@
-//go:build gorilla && !nhooyr
+//go:build gorilla
 
 package wsdial
 
