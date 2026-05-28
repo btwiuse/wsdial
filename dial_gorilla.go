@@ -3,6 +3,7 @@
 package wsdial
 
 import (
+	"context"
 	"crypto/tls"
 	"net"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func Dial(u *url.URL) (conn net.Conn, err error) {
+func Dial(ctx context.Context, u *url.URL, hdr http.Header) (conn net.Conn, err error) {
 	var wd *websocket.Dialer = &websocket.Dialer{
 		Proxy: http.ProxyFromEnvironment,
 		TLSClientConfig: &tls.Config{
@@ -20,7 +21,7 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 		},
 	}
 
-	wsconn, _, err := wd.Dial(u.String(), nil)
+	wsconn, _, err := wd.DialContext(ctx, u.String(), hdr)
 	if err != nil {
 		return nil, err
 	}

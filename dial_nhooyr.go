@@ -4,7 +4,6 @@ package wsdial
 
 import (
 	"context"
-	"encoding/base64"
 	"net"
 	"net/http"
 	"net/url"
@@ -12,14 +11,9 @@ import (
 	"github.com/coder/websocket"
 )
 
-func Dial(u *url.URL) (conn net.Conn, err error) {
-	hdr := http.Header{}
-	if u.User != nil {
-		hdr.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(u.User.String())))
-	}
-
+func Dial(ctx context.Context, u *url.URL, hdr http.Header) (conn net.Conn, err error) {
 	wsconn, _, err := websocket.Dial(
-		context.Background(),
+		ctx,
 		u.String(),
 		dialOptions(hdr),
 	)
@@ -27,6 +21,6 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 		return nil, err
 	}
 
-	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
+	return websocket.NetConn(ctx, wsconn, websocket.MessageBinary), nil
 }
 
